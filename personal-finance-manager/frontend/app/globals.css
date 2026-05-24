@@ -1,0 +1,79 @@
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 30% 96%;
+    --foreground: 222 47% 11%;
+    --card: 35 33% 98%;
+    --card-foreground: 222 47% 11%;
+    --popover: 35 33% 98%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 224 76% 48%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 34 36% 93%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 34 33% 96%;
+    --muted-foreground: 32 15% 36%;
+    --accent: 30 28% 92%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 5 72% 41%;
+    --destructive-foreground: 0 85% 97%;
+    --border: 34 20% 87%;
+    --input: 34 20% 87%;
+    --ring: 224 76% 48%;
+    --subtle: 32 11% 53%;
+    --success: 145 46% 34%;
+    --success-foreground: 144 60% 96%;
+    --warning: 28 84% 44%;
+    --warning-foreground: 40 100% 97%;
+    --danger: 5 72% 41%;
+    --danger-foreground: 0 85% 97%;
+    --grid-color: 32 22% 66%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 220 22% 7%;
+    --foreground: 210 40% 98%;
+    --card: 220 21% 10%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 21% 10%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 213 94% 80%;
+    --primary-foreground: 220 23% 7%;
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 220 17% 14%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 220 16% 16%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 5 80% 60%;
+    --destructive-foreground: 220 23% 7%;
+    --border: 220 18% 20%;
+    --input: 220 18% 20%;
+    --ring: 213 94% 80%;
+    --subtle: 215 20% 65%;
+    --success: 145 46% 48%;
+    --success-foreground: 144 60% 96%;
+    --warning: 28 90% 60%;
+    --warning-foreground: 220 23% 7%;
+    --danger: 5 80% 60%;
+    --danger-foreground: 220 23% 7%;
+    --grid-color: 220 12% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-image: radial-gradient(hsl(var(--grid-color) / 1) 2px, transparent 2px);
+    background-size: 18px 18px;
+  }
+}
