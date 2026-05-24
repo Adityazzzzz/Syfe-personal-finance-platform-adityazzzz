@@ -21,6 +21,10 @@ A comprehensive REST API for managing personal finances, built with Spring Boot 
 - **JUnit 5 & Mockito**
 
 ## API Endpoints
+Run frontend - npm run dev
+Run backend - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && mvn spring-boot:run
+
+## API Endpoints
 
 ### Authentication
 | Method | Endpoint | Description |
