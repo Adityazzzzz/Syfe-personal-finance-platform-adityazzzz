@@ -76,7 +76,7 @@ public class TransactionService {
     }
     
     @Transactional
-    public TransactionResponse updateTransaction(Long userId, Long transactionId, TransactionRequest request) {
+    public TransactionResponse updateTransaction(Long userId, Long transactionId, TransactionUpdateRequest request) {
         Transaction transaction = transactionRepository.findById(transactionId)
             .orElseThrow(() -> new ResourceNotFoundException("Transaction not found"));
         
@@ -84,16 +84,39 @@ public class TransactionService {
             throw new ForbiddenException("Access denied");
         }
         
-        // Date cannot be modified
-        
-        Category category = categoryRepository.findByNameAndUserIdOrDefault(request.getCategory(), userId)
-            .orElseThrow(() -> new BadRequestException("Invalid category: " + request.getCategory()));
-        
-        transaction.setAmount(request.getAmount());
-        transaction.setCategory(request.getCategory());
-        transaction.setDescription(request.getDescription());
-        transaction.setType(category.getType());
-        
+        if (request == null) {
+            return mapToResponse(transaction);
+        }
+
+        boolean hasUpdates = false;
+
+        if (request.getAmount() != null) {
+            if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new BadRequestException("Amount must be positive");
+            }
+            transaction.setAmount(request.getAmount());
+            hasUpdates = true;
+        }
+
+        if (request.getDescription() != null) {
+            transaction.setDescription(request.getDescription());
+            hasUpdates = true;
+        }
+
+        if (request.getCategory() != null && !request.getCategory().isBlank()) {
+            Category category = categoryRepository.findByNameAndUserIdOrDefault(request.getCategory(), userId)
+                .orElseThrow(() -> new BadRequestException("Invalid category: " + request.getCategory()));
+            transaction.setCategory(request.getCategory());
+            transaction.setType(category.getType());
+            hasUpdates = true;
+        } else if (request.getCategory() != null && request.getCategory().isBlank()) {
+            throw new BadRequestException("Category is required");
+        }
+
+        if (!hasUpdates) {
+            return mapToResponse(transaction);
+        }
+
         Transaction updated = transactionRepository.save(transaction);
         return mapToResponse(updated);
     }

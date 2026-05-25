@@ -47,7 +47,7 @@ public class GoalController {
     @PutMapping("/{id}")
     public ResponseEntity<GoalResponse> updateGoal(
             @PathVariable Long id,
-            @Valid @RequestBody GoalRequest request,
+            @Valid @RequestBody GoalUpdateRequest request,
             HttpSession session) {
         Long userId = userService.getCurrentUserId(session);
         return ResponseEntity.ok(goalService.updateGoal(userId, id, request));

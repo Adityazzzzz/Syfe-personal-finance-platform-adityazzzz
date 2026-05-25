@@ -46,7 +46,7 @@ public class TransactionController {
     @PutMapping("/{id}")
     public ResponseEntity<TransactionResponse> updateTransaction(
             @PathVariable Long id,
-            @Valid @RequestBody TransactionRequest request,
+            @RequestBody TransactionUpdateRequest request,
             HttpSession session) {
         Long userId = userService.getCurrentUserId(session);
         TransactionResponse response = transactionService.updateTransaction(userId, id, request);

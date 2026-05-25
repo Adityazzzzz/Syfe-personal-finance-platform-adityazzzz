@@ -42,6 +42,9 @@ public class GoalService {
         
         LocalDate startDate = request.getStartDate() != null ? 
             LocalDate.parse(request.getStartDate()) : LocalDate.now();
+        if (startDate.isAfter(targetDate)) {
+            throw new BadRequestException("Start date must be on or before target date");
+        }
         
         Goal goal = new Goal();
         goal.setGoalName(request.getGoalName());
@@ -68,12 +71,25 @@ public class GoalService {
     }
     
     @Transactional
-    public GoalResponse updateGoal(Long userId, Long goalId, GoalRequest request) {
+    public GoalResponse updateGoal(Long userId, Long goalId, GoalUpdateRequest request) {
         Goal goal = goalRepository.findByIdAndUserId(goalId, userId)
             .orElseThrow(() -> new ResourceNotFoundException("Goal not found"));
+        if (request == null) {
+            return mapToResponse(goal, userId);
+        }
+
+        boolean hasUpdates = false;
+        String goalName = request.getGoalName();
+        if (goalName != null && !goalName.isBlank()) {
+            goal.setGoalName(goalName);
+            hasUpdates = true;
+        } else if (goalName != null && goalName.isBlank()) {
+            throw new BadRequestException("Goal name is required");
+        }
         
         if (request.getTargetAmount() != null) {
             goal.setTargetAmount(request.getTargetAmount());
+            hasUpdates = true;
         }
         
         if (request.getTargetDate() != null) {
@@ -82,6 +98,21 @@ public class GoalService {
                 throw new BadRequestException("Target date must be a future date");
             }
             goal.setTargetDate(targetDate);
+            hasUpdates = true;
+        }
+
+        if (request.getStartDate() != null) {
+            LocalDate startDate = LocalDate.parse(request.getStartDate());
+            goal.setStartDate(startDate);
+            hasUpdates = true;
+        }
+
+        if (goal.getStartDate().isAfter(goal.getTargetDate())) {
+            throw new BadRequestException("Start date must be on or before target date");
+        }
+
+        if (!hasUpdates) {
+            return mapToResponse(goal, userId);
         }
         
         Goal updated = goalRepository.save(goal);

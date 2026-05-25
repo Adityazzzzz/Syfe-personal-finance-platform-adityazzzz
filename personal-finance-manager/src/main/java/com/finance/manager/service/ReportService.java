@@ -2,6 +2,7 @@ package com.finance.manager.service;
 
 import com.finance.manager.dto.*;
 import com.finance.manager.entity.*;
+import com.finance.manager.exception.BadRequestException;
 import com.finance.manager.exception.ResourceNotFoundException;
 import com.finance.manager.repository.*;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,10 @@ public class ReportService {
     public MonthlyReportResponse getMonthlyReport(Long userId, int year, int month) {
         if (!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("User not found");
+        }
+
+        if (month < 1 || month > 12) {
+            throw new BadRequestException("Month must be between 1 and 12");
         }
         
         YearMonth yearMonth = YearMonth.of(year, month);
