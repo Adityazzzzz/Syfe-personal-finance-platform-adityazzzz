@@ -41,6 +41,7 @@ class TransactionServiceTest {
     private Category testCategory;
     private Transaction testTransaction;
     private TransactionRequest request;
+    private TransactionUpdateRequest updateRequest;
     
     @BeforeEach
     void setUp() {
@@ -67,6 +68,11 @@ class TransactionServiceTest {
         request.setDate(LocalDate.now().toString());
         request.setCategory("Salary");
         request.setDescription("Monthly salary");
+
+        updateRequest = new TransactionUpdateRequest();
+        updateRequest.setAmount(new BigDecimal("5000.00"));
+        updateRequest.setCategory("Salary");
+        updateRequest.setDescription("Monthly salary");
     }
     
     @Test
@@ -110,9 +116,8 @@ class TransactionServiceTest {
         testTransaction.setUser(otherUser);
         
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.of(testTransaction));
-        when(categoryRepository.findByNameAndUserIdOrDefault(anyString(), anyLong())).thenReturn(Optional.of(testCategory));
         
-        assertThrows(ForbiddenException.class, () -> transactionService.updateTransaction(1L, 1L, request));
+        assertThrows(ForbiddenException.class, () -> transactionService.updateTransaction(1L, 1L, updateRequest));
     }
     
     @Test
